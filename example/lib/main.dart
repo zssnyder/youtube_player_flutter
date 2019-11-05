@@ -69,7 +69,7 @@ class _MyHomePageState extends State<MyHomePage> {
         mute: false,
         autoPlay: true,
         forceHideAnnotation: true,
-        disableDragSeek: false,
+        enableDragSeek: true,
         loop: true,
         start: Duration(seconds: 20),
       ),

@@ -4,10 +4,10 @@
 
 /// Defines player flags for [YoutubePlayer].
 class YoutubePlayerFlags {
-  /// if set to true, hides the controls.
+  /// if set to false, hides the controls.
   ///
-  /// Default is false.
-  final bool hideControls;
+  /// Default is true.
+  final bool showControls;
 
   /// Define whether to auto play the video after initialization or not.
   ///
@@ -32,15 +32,15 @@ class YoutubePlayerFlags {
   /// It's hidden by default on iOS. Changing this flag will have no effect on iOS.
   final bool forceHideAnnotation;
 
-  /// Hides thumbnail if true.
+  /// Hides thumbnail if false.
   ///
-  /// Default is false.
-  final bool hideThumbnail;
+  /// Default is true.
+  final bool showThumbnail;
 
-  /// Disables seeking video position when dragging horizontally.
+  /// Enables seeking video position when dragging horizontally.
   ///
-  /// Default is false.
-  final bool disableDragSeek;
+  /// Default is true.
+  final bool enableDragSeek;
 
   /// Enabling this causes the player to play the video again and again.
   ///
@@ -67,13 +67,13 @@ class YoutubePlayerFlags {
   final Duration end;
 
   const YoutubePlayerFlags({
-    this.hideControls = false,
+    this.showControls = true,
     this.autoPlay = true,
     this.mute = false,
     this.isLive = false,
     this.forceHideAnnotation = true,
-    this.hideThumbnail = false,
-    this.disableDragSeek = false,
+    this.showThumbnail = true,
+    this.enableDragSeek = true,
     this.enableCaption = true,
     this.captionLanguage = 'en',
     this.loop = false,
@@ -99,12 +99,12 @@ class YoutubePlayerFlags {
     return YoutubePlayerFlags(
       autoPlay: autoPlay ?? this.autoPlay,
       captionLanguage: captionLanguage ?? this.captionLanguage,
-      disableDragSeek: disableDragSeek ?? this.disableDragSeek,
+      enableDragSeek: disableDragSeek ?? this.enableDragSeek,
       enableCaption: enableCaption ?? this.enableCaption,
       end: end ?? this.end,
       forceHideAnnotation: forceHideAnnotation ?? this.forceHideAnnotation,
-      hideControls: hideControls ?? this.hideControls,
-      hideThumbnail: hideThumbnail ?? this.hideThumbnail,
+      showControls: hideControls ?? this.showControls,
+      showThumbnail: hideThumbnail ?? this.showThumbnail,
       isLive: isLive ?? this.isLive,
       loop: loop ?? this.loop,
       mute: mute ?? this.mute,

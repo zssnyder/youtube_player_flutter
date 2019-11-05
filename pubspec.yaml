@@ -22,3 +22,7 @@ flutter:
 
   assets:
     - assets/speedometer.webp
+
+  plugin:
+    web:
+      fileName: youtube_player_flutter.dart

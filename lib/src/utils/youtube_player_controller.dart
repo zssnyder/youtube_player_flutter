@@ -2,6 +2,10 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'dart:convert';
+import 'dart:html' show IFrameElement;
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -34,6 +38,7 @@ class YoutubePlayerValue {
     this.isDragging = false,
     this.title = '',
     this.author = '',
+    this.currentIframe,
   });
 
   /// Returns true when underlying web player reports ready.
@@ -105,6 +110,9 @@ class YoutubePlayerValue {
   /// i.e. Channel Name
   final String author;
 
+  /// Current [IframeElement] in which the player is loaded.
+  final IFrameElement currentIframe;
+
   YoutubePlayerValue copyWith({
     bool isReady,
     bool isEvaluationReady,
@@ -127,6 +135,7 @@ class YoutubePlayerValue {
     bool isDragging,
     String title,
     String author,
+    IFrameElement currentIframe,
   }) {
     return YoutubePlayerValue(
       isReady: isReady ?? this.isReady,
@@ -150,6 +159,7 @@ class YoutubePlayerValue {
       isDragging: isDragging ?? this.isDragging,
       title: title ?? this.title,
       author: author ?? this.author,
+      currentIframe: currentIframe ?? this.currentIframe,
     );
   }
 
@@ -198,26 +208,38 @@ class YoutubePlayerController extends ValueNotifier<YoutubePlayerValue> {
         super(YoutubePlayerValue(isReady: false));
 
   static YoutubePlayerController of(BuildContext context) {
-    InheritedYoutubePlayer _player =
-        context.inheritFromWidgetOfExactType(InheritedYoutubePlayer);
+    InheritedYoutubePlayer _player = context.inheritFromWidgetOfExactType(InheritedYoutubePlayer);
     return _player?.controller;
   }
 
   _callMethod(String methodName, {dynamic arg1, dynamic arg2}) {
-    if (value.isEvaluationReady) {
-      String methodString;
-      if (arg1 == null && arg2 == null) {
-        methodString = '$methodName()';
-      } else if (arg1 != null && arg2 == null) {
-        methodString = '$methodName($arg1)';
-      } else if (arg1 == null && arg2 != null) {
-        throw Exception('Invalid argument order');
+    if (kIsWeb) {
+      if (value.currentIframe != null) {
+        Map<String, dynamic> message = {
+          'methodName': methodName,
+          'arg1': arg1,
+          'arg2': arg2,
+        };
+        value.currentIframe.contentWindow.postMessage(jsonEncode(message), '*');
       } else {
-        methodString = '$methodName($arg1, $arg2)';
+        print('The controller is not ready for method calls.');
       }
-      value.webViewController?.evaluateJavascript(methodString);
     } else {
-      print('The controller is not ready for method calls.');
+      if (value.isEvaluationReady) {
+        String methodString;
+        if (arg1 == null && arg2 == null) {
+          methodString = '$methodName()';
+        } else if (arg1 != null && arg2 == null) {
+          methodString = '$methodName($arg1)';
+        } else if (arg1 == null && arg2 != null) {
+          throw Exception('Invalid argument order');
+        } else {
+          methodString = '$methodName($arg1, $arg2)';
+        }
+        value.webViewController?.evaluateJavascript(methodString);
+      } else {
+        print('The controller is not ready for method calls.');
+      }
     }
   }
 
@@ -279,16 +301,13 @@ class YoutubePlayerController extends ValueNotifier<YoutubePlayerValue> {
   }
 
   /// Sets the size in pixels of the player.
-  void setSize(Size size) =>
-      _callMethod('setSize', arg1: size.width, arg2: size.height);
+  void setSize(Size size) => _callMethod('setSize', arg1: size.width, arg2: size.height);
 
   /// Sets the playback speed for the video.
-  void setPlaybackRate(double rate) =>
-      _callMethod('setPlaybackRate', arg1: rate);
+  void setPlaybackRate(double rate) => _callMethod('setPlaybackRate', arg1: rate);
 
   /// Toggles the player's full screen mode.
-  void toggleFullScreenMode() =>
-      updateValue(value.copyWith(toggleFullScreen: true));
+  void toggleFullScreenMode() => updateValue(value.copyWith(toggleFullScreen: true));
 
   /// The title of the currently playing YouTube video.
   String get title => value.title;
