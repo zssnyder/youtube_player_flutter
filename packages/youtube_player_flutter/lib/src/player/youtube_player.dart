@@ -279,6 +279,13 @@ class _YoutubePlayerState extends State<YoutubePlayer> {
                       fontWeight: FontWeight.w300,
                     ),
                   ),
+                  controller.value.isFullScreen
+                      ? FlatButton(
+                          child: const Text('Back'),
+                          onPressed: () {
+                            controller.toggleFullScreenMode();
+                          })
+                      : Container(),
                 ],
               ),
             ),
@@ -296,10 +303,15 @@ class _YoutubePlayerState extends State<YoutubePlayer> {
         overflow: Overflow.visible,
         children: [
           Transform.scale(
-            scale: controller.value.isFullScreen
-                ? (1 / _aspectRatio * MediaQuery.of(context).size.width) /
-                    MediaQuery.of(context).size.height
-                : 1,
+            // scale: controller.value.isFullScreen
+            //     ? (1 /
+            //             _aspectRatio *
+            //             (MediaQuery.of(context).size.width -
+            //                 MediaQuery.of(context).padding.horizontal)) /
+            //         (MediaQuery.of(context).size.height -
+            //             MediaQuery.of(context).padding.vertical)
+            //     : 1,
+            scale: 1,
             child: RawYoutubePlayer(
               key: widget.key,
               onEnded: (YoutubeMetaData metaData) {
@@ -371,7 +383,8 @@ class _YoutubePlayerState extends State<YoutubePlayer> {
                                   colors: widget.progressColors,
                                 ),
                                 RemainingDuration(),
-                                const PlaybackSpeedButton(),
+                                const SizedBox(width: 8.0),
+                                // const PlaybackSpeedButton(),
                                 FullScreenButton(),
                               ],
                         ),
@@ -399,7 +412,14 @@ class _YoutubePlayerState extends State<YoutubePlayer> {
           ],
           if (!controller.flags.hideControls)
             Center(
-              child: PlayPauseButton(),
+              child: AnimatedOpacity(
+                opacity: !controller.flags.hideControls &&
+                        controller.value.isControlsVisible
+                    ? 1
+                    : 0,
+                duration: const Duration(milliseconds: 300),
+                child: PlayPauseButton(),
+              ),
             ),
           if (controller.value.hasError) errorWidget,
         ],
@@ -407,26 +427,41 @@ class _YoutubePlayerState extends State<YoutubePlayer> {
     );
   }
 
-  Widget get _thumbnail => Image.network(
-        YoutubePlayer.getThumbnail(
+  Widget get _thumbnail {
+    var thumbnail;
+    var defaultThumbnail;
+    try {
+      thumbnail = YoutubePlayer.getThumbnail(
+        videoId: controller.metadata.videoId.isEmpty
+            ? controller.initialVideoId
+            : controller.metadata.videoId,
+      );
+    } on NetworkImageLoadException catch (e) {
+      print(e);
+      try {
+        defaultThumbnail = YoutubePlayer.getThumbnail(
           videoId: controller.metadata.videoId.isEmpty
               ? controller.initialVideoId
               : controller.metadata.videoId,
-        ),
+          webp: false,
+        );
+      } on NetworkImageLoadException catch (e) {
+        print(e);
+      }
+    } finally {
+      return Image.network(
+        thumbnail,
         fit: BoxFit.cover,
         loadingBuilder: (_, child, progress) =>
             progress == null ? child : Container(color: Colors.black),
         errorBuilder: (context, _, __) => Image.network(
-          YoutubePlayer.getThumbnail(
-            videoId: controller.metadata.videoId.isEmpty
-                ? controller.initialVideoId
-                : controller.metadata.videoId,
-            webp: false,
-          ),
+          defaultThumbnail,
           fit: BoxFit.cover,
           loadingBuilder: (_, child, progress) =>
               progress == null ? child : Container(color: Colors.black),
           errorBuilder: (context, _, __) => Container(),
         ),
       );
+    }
+  }
 }
