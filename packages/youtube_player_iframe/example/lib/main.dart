@@ -43,7 +43,7 @@ class YoutubeAppDemo extends StatefulWidget {
 }
 
 class _YoutubeAppDemoState extends State<YoutubeAppDemo> {
-  YoutubePlayerController _controller;
+  late YoutubePlayerController _controller;
 
   @override
   void initState() {
@@ -65,15 +65,11 @@ class _YoutubeAppDemoState extends State<YoutubeAppDemo> {
         startAt: const Duration(minutes: 1, seconds: 36),
         showControls: true,
         showFullscreenButton: true,
-        desktopMode: false,
+        desktopMode: true,
+        privacyEnhanced: true,
+        useHybridComposition: true,
       ),
-    )..listen((value) {
-        if (value.isReady && !value.hasPlayed) {
-          _controller
-            ..hidePauseOverlay()
-            ..hideTopMenu();
-        }
-      });
+    );
     _controller.onEnterFullscreen = () {
       SystemChrome.setPreferredOrientations([
         DeviceOrientation.landscapeLeft,
@@ -82,13 +78,6 @@ class _YoutubeAppDemoState extends State<YoutubeAppDemo> {
       log('Entered Fullscreen');
     };
     _controller.onExitFullscreen = () {
-      SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-      Future.delayed(const Duration(seconds: 1), () {
-        _controller.play();
-      });
-      Future.delayed(const Duration(seconds: 5), () {
-        SystemChrome.setPreferredOrientations(DeviceOrientation.values);
-      });
       log('Exited Fullscreen');
     };
   }
@@ -101,7 +90,7 @@ class _YoutubeAppDemoState extends State<YoutubeAppDemo> {
       controller: _controller,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Youtube Player Demo'),
+          title: const Text('Youtube Player IFrame'),
         ),
         body: LayoutBuilder(
           builder: (context, constraints) {

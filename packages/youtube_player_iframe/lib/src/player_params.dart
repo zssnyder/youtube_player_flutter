@@ -70,7 +70,7 @@ class YoutubePlayerParams {
   ///
   /// Note that the time is measured from the beginning of the video and not from either the value of the start player parameter or the startSeconds parameter,
   /// which is used in YouTube Player API functions for loading or queueing a video.
-  final Duration endAt;
+  final Duration? endAt;
 
   /// Setting this parameter to false prevents the fullscreen button from displaying in the player.
   ///
@@ -134,6 +134,20 @@ class YoutubePlayerParams {
   /// Only effective on mobile devices.
   final bool desktopMode;
 
+  /// Enables privacy enhanced embedding mode.
+  ///
+  /// More detail at https://support.google.com/youtube/answer/171780?hl=en
+  ///
+  /// Default is false.
+  final bool privacyEnhanced;
+
+  /// Set to `true` to enable Flutter's new Hybrid Composition. The default value is `true`.
+  /// Hybrid Composition is supported starting with Flutter v1.20+.
+  ///
+  /// **NOTE**: It is recommended to use Hybrid Composition only on Android 10+ for a release app,
+  /// as it can cause framerate drops on animations in Android 9 and lower (see [Hybrid-Composition#performance](https://github.com/flutter/flutter/wiki/Hybrid-Composition#performance)).
+  final bool useHybridComposition;
+
   /// Defines player parameters for [YoutubePlayer].
   const YoutubePlayerParams({
     this.autoPlay = true,
@@ -143,7 +157,7 @@ class YoutubePlayerParams {
     this.color = 'white',
     this.showControls = true,
     this.enableKeyboard = kIsWeb,
-    this.enableJavaScript = false,
+    this.enableJavaScript = true,
     this.endAt,
     this.showFullscreenButton = false,
     this.interfaceLanguage = 'en',
@@ -155,5 +169,7 @@ class YoutubePlayerParams {
     this.strictRelatedVideos = false,
     this.startAt = Duration.zero,
     this.desktopMode = false,
+    this.privacyEnhanced = false,
+    this.useHybridComposition = true,
   });
 }
