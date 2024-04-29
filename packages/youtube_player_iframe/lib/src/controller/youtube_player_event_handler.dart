@@ -26,8 +26,7 @@ class YoutubePlayerEventHandler {
   final YoutubePlayerController controller;
 
   /// The [YoutubeVideoState] stream controller.
-  final StreamController<YoutubeVideoState> videoStateController =
-      StreamController.broadcast();
+  final StreamController<YoutubeVideoState> videoStateController = StreamController.broadcast();
 
   final Completer<void> _readyCompleter = Completer();
   late final Map<String, ValueChanged<Object>> _events;

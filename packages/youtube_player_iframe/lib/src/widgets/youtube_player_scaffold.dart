@@ -35,8 +35,7 @@ class YoutubePlayerScaffold extends StatefulWidget {
     ],
     this.enableFullScreenOnVerticalDrag = true,
     this.backgroundColor,
-    @Deprecated('Unused parameter. Use `YoutubePlayerParam.userAgent` instead.')
-    this.userAgent,
+    @Deprecated('Unused parameter. Use `YoutubePlayerParam.userAgent` instead.') this.userAgent,
   });
 
   /// Builds the child widget.
@@ -87,26 +86,23 @@ class YoutubePlayerScaffold extends StatefulWidget {
 }
 
 class _YoutubePlayerScaffoldState extends State<YoutubePlayerScaffold> {
-  late final GlobalObjectKey _playerKey;
+  // late final GlobalObjectKey _playerKey;
 
   @override
   void initState() {
     super.initState();
 
-    _playerKey = GlobalObjectKey(widget.controller);
+    // _playerKey = GlobalObjectKey(widget.controller);
   }
 
   @override
   Widget build(BuildContext context) {
-    final player = KeyedSubtree(
-      key: _playerKey,
-      child: YoutubePlayer(
-        controller: widget.controller,
-        aspectRatio: widget.aspectRatio,
-        gestureRecognizers: widget.gestureRecognizers,
-        enableFullScreenOnVerticalDrag: widget.enableFullScreenOnVerticalDrag,
-        backgroundColor: widget.backgroundColor,
-      ),
+    final player = YoutubePlayer(
+      controller: widget.controller,
+      aspectRatio: widget.aspectRatio,
+      gestureRecognizers: widget.gestureRecognizers,
+      enableFullScreenOnVerticalDrag: widget.enableFullScreenOnVerticalDrag,
+      backgroundColor: widget.backgroundColor,
     );
 
     return YoutubePlayerControllerProvider(
@@ -227,9 +223,7 @@ class _FullScreenState extends State<_FullScreen> with WidgetsBindingObserver {
   }
 
   SystemUiMode get _uiMode {
-    return widget.fullScreenOption.enabled
-        ? SystemUiMode.immersive
-        : SystemUiMode.edgeToEdge;
+    return widget.fullScreenOption.enabled ? SystemUiMode.immersive : SystemUiMode.edgeToEdge;
   }
 
   void _handleFullScreenBackAction(bool didPop) {
