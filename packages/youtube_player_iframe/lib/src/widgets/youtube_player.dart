@@ -24,8 +24,7 @@ class YoutubePlayer extends StatefulWidget {
     this.aspectRatio = 16 / 9,
     this.gestureRecognizers = const <Factory<OneSequenceGestureRecognizer>>{},
     this.backgroundColor,
-    @Deprecated('Unused parameter. Use `YoutubePlayerParam.userAgent` instead.')
-    this.userAgent,
+    @Deprecated('Unused parameter. Use `YoutubePlayerParam.userAgent` instead.') this.userAgent,
     this.enableFullScreenOnVerticalDrag = true,
   });
 
@@ -103,6 +102,8 @@ class _YoutubePlayerState extends State<YoutubePlayer> {
       );
     }
 
+    return player;
+
     return OrientationBuilder(
       builder: (context, orientation) {
         return AspectRatio(
@@ -119,14 +120,13 @@ class _YoutubePlayerState extends State<YoutubePlayer> {
     final delta = details.delta.dy;
 
     if (delta.abs() > 10) {
-      delta.isNegative
-          ? _controller.enterFullScreen()
-          : _controller.exitFullScreen();
+      delta.isNegative ? _controller.enterFullScreen() : _controller.exitFullScreen();
     }
   }
 
   void _updateBackgroundColor(Color? backgroundColor) {
     final bgColor = backgroundColor ?? Theme.of(context).colorScheme.background;
+
     _controller.webViewController.setBackgroundColor(bgColor);
   }
 
