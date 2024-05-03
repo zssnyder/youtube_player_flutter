@@ -104,16 +104,16 @@ class _YoutubePlayerState extends State<YoutubePlayer> {
 
     return player;
 
-    return OrientationBuilder(
-      builder: (context, orientation) {
-        return AspectRatio(
-          aspectRatio: orientation == Orientation.landscape
-              ? MediaQuery.of(context).size.aspectRatio
-              : widget.aspectRatio,
-          child: player,
-        );
-      },
-    );
+    // return OrientationBuilder(
+    //   builder: (context, orientation) {
+    //     return AspectRatio(
+    //       aspectRatio: orientation == Orientation.landscape
+    //           ? MediaQuery.of(context).size.aspectRatio
+    //           : widget.aspectRatio,
+    //       child: player,
+    //     );
+    //   },
+    // );
   }
 
   void _fullscreenGesture(DragUpdateDetails details) {
