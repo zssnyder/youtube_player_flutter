@@ -163,9 +163,7 @@ class YoutubePlayerController extends ValueNotifier<YoutubePlayerValue> {
 
   /// Finds [YoutubePlayerController] in the provided context.
   static YoutubePlayerController? of(BuildContext context) {
-    return context
-        .dependOnInheritedWidgetOfExactType<InheritedYoutubePlayer>()
-        ?.controller;
+    return context.dependOnInheritedWidgetOfExactType<InheritedYoutubePlayer>()?.controller;
   }
 
   _callMethod(String methodString) {
@@ -251,8 +249,7 @@ class YoutubePlayerController extends ValueNotifier<YoutubePlayerValue> {
   }
 
   /// Sets the size in pixels of the player.
-  void setSize(Size size) =>
-      _callMethod('setSize(${size.width}, ${size.height})');
+  void setSize(Size size) => _callMethod('setSize(${size.width}, ${size.height})');
 
   /// Fits the video to screen width.
   void fitWidth(Size screenSize) {
@@ -284,6 +281,21 @@ class YoutubePlayerController extends ValueNotifier<YoutubePlayerValue> {
       SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     }
   }
+
+  Future<Uint8List?>? takeScreenshot({
+    bool afterScreenUpdates = true,
+    String format = 'png',
+    int quality = 100,
+    double? snapshotWidth,
+  }) =>
+      value.webViewController?.takeScreenshot(
+        screenshotConfiguration: ScreenshotConfiguration(
+          afterScreenUpdates: afterScreenUpdates,
+          compressFormat: format == 'jpeg' ? CompressFormat.JPEG : CompressFormat.PNG,
+          quality: quality,
+          snapshotWidth: snapshotWidth,
+        ),
+      );
 
   /// MetaData for the currently loaded or cued video.
   YoutubeMetaData get metadata => value.metaData;
