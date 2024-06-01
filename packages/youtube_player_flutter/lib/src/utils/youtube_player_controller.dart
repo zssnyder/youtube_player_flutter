@@ -159,7 +159,10 @@ class YoutubePlayerController extends ValueNotifier<YoutubePlayerValue> {
   YoutubePlayerController({
     required this.initialVideoId,
     this.flags = const YoutubePlayerFlags(),
-  }) : super(YoutubePlayerValue());
+  }) : super(YoutubePlayerValue()) {
+    // Disable log messages
+    PlatformInAppWebViewController.debugLoggingSettings.enabled = false;
+  }
 
   /// Finds [YoutubePlayerController] in the provided context.
   static YoutubePlayerController? of(BuildContext context) {
