@@ -74,7 +74,7 @@ class _RawYoutubePlayerState extends State<RawYoutubePlayer> with WidgetsBinding
         key: widget.key,
         initialData: InAppWebViewInitialData(
           data: player,
-          baseUrl: WebUri.uri(Uri.https('www.youtube.com')),
+          // baseUrl: WebUri.uri(Uri.https('www.youtube.com')),
           encoding: 'utf-8',
           mimeType: 'text/html',
         ),
@@ -382,5 +382,5 @@ class _RawYoutubePlayerState extends State<RawYoutubePlayer> with WidgetsBinding
 
   String get userAgent => controller!.flags.forceHD
       ? 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36'
-      : '';
+      : 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1';
 }
